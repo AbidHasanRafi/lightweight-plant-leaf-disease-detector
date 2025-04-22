@@ -1,4 +1,4 @@
-# 🌿 Lightweight Plant Leaf Disease Detector with Grad-CAM
+# 🌿 Lightweight Plant Leaf Disease Detector
 
 A deep learning-powered web application designed to diagnose plant diseases from leaf images, utilizing Grad-CAM (Gradient-weighted Class Activation Mapping) to visualize the areas of the leaf that influenced the model's decision.
 
