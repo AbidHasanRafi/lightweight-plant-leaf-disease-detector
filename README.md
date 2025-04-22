@@ -12,7 +12,49 @@ A deep learning-powered web application designed to diagnose plant diseases from
 - **Dark Mode Support**: Automatically adapts to the user's preferred theme.
 - **Confidence Metrics**: Displays prediction probabilities to showcase the model's certainty.
 
+## Dataset
+
+The model is trained using a dataset that contains images of plant leaves, labeled with their corresponding diseases. You can test the app using the images from the dataset. The dataset can be accessed from the following Kaggle link:
+
+[Plant Village Dataset (Updated)](https://www.kaggle.com/datasets/tushar5harma/plant-village-dataset-updated)
+
 ## Model Architecture
+```python
+# model architecture
+class PlantDiseaseCNN(nn.Module):
+    def __init__(self, num_classes):
+        super(PlantDiseaseCNN, self).__init__()
+        self.features = nn.Sequential(
+            nn.Conv2d(3, 32, kernel_size=3, padding=1, bias=False),
+            nn.BatchNorm2d(32),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Conv2d(32, 32, kernel_size=3, padding=1, groups=32, bias=False),
+            nn.Conv2d(32, 64, kernel_size=1, bias=False),
+            nn.BatchNorm2d(64),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Conv2d(64, 64, kernel_size=3, padding=1, groups=64, bias=False),
+            nn.Conv2d(64, 128, kernel_size=1, bias=False),
+            nn.BatchNorm2d(128),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Conv2d(128, 128, kernel_size=1),
+            nn.Sigmoid()
+        )
+        self.classifier = nn.Sequential(
+            nn.AdaptiveAvgPool2d(1),
+            nn.Flatten(),
+            nn.Dropout(0.5),
+            nn.Linear(128, num_classes)
+        )
+
+    def forward(self, x):
+        features = self.features[:-1](x)
+        attention = self.features[-1](features)
+        attended = features * attention
+        return self.classifier(attended)
+```
 
 The application leverages a custom lightweight Convolutional Neural Network (CNN) designed for efficiency and performance:
 - **Depthwise Separable Convolutions**: Reduces computational cost while maintaining accuracy.
